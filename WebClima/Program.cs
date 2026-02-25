@@ -153,10 +153,10 @@ try
 
     app.UseCors("AllowFrontend");
 
-    app.UseAuthentication();
-    app.UseAuthorization();
+    // Middleware global de exceção (antes de tudo)
+    app.UseMiddleware<GlobalExceptionMiddleware>();
 
-    // Swagger
+    // Swagger SEM autenticação obrigatória
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
@@ -165,18 +165,18 @@ try
         options.DisplayRequestDuration();
     });
 
-    // Arquivos estáticos (frontend)
+    // Arquivos estáticos (frontend SPA)
     app.UseDefaultFiles();
     app.UseStaticFiles();
+
+    // Autenticação e autorização (afeta apenas endpoints mapeados depois)
+    app.UseAuthentication();
+    app.UseAuthorization();
 
     // Controllers da API
     app.MapControllers();
 
-    app.MapFallbackToFile("index.html");
-
-    app.UseMiddleware<GlobalExceptionMiddleware>();
-
-
+    // Health check público
     app.MapHealthChecks("/health", new HealthCheckOptions
     {
         ResponseWriter = async (context, report) =>
@@ -206,24 +206,22 @@ try
         }
     });
 
+    // SPA fallback (SEMPRE ÚLTIMO)
+    app.MapFallbackToFile("index.html");
 
+    // Executa migrations
     using (var scope = app.Services.CreateScope())
     {
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-
-        // Só executa Migrate() se não for InMemory
         if (db.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
-        {
             db.Database.Migrate();
-        }
         else
-        {
             db.Database.EnsureCreated();
-        }
     }
+
     app.Run();
-    
+
 }
 catch (Exception ex)
 {
