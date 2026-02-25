@@ -51,12 +51,11 @@ Web Clima API é uma solução para consulta de condições climáticas.
 - **Docker Compose**: Orquestração completa, incluindo Nginx como gateway/proxy reverso.
 - **Arquivo `.env`**: Configuração centralizada.
 
-## Imagens Docker Hub
+## Imagem Docker Hub
 
 | Serviço   | Imagem Docker Hub                  |
 |-----------|------------------------------------|
-| API       | `darl1ngx/webclima-backend`        |
-| Frontend  | `darl1ngx/webclima-frontend`       |
+| WebClima       | `darl1ngx/webclima`           |
 
 ## Como Executar
 
@@ -86,15 +85,13 @@ Serviços principais:
 
 | Serviço   | URL                          | Descrição                        |
 |-----------|------------------------------|----------------------------------|
-| Frontend  | http://localhost:5173        | Interface web (Vue 3)            |
-| API       | http://localhost:5110        | Backend (.NET 8)                 |
-| Swagger   | http://localhost:5110/swagger| Documentação da API              |
-| Health    | http://localhost:5110/health | Health check da aplicação        |
-| Banco     | http://localhost:5432        | PostgreSQL 17                    |
+| Frontend  | http://localhost:8080        | Interface web (Vue 3)            |
+| Swagger   | http://localhost:8080/swagger| Documentação da API              |
+| Health    | http://localhost:8080/health | Health check da aplicação        |
 
 ### Primeiros passos
 
-1. Acesse [http://localhost:5173/login](http://localhost:5173/login)
+1. Acesse [http://localhost:8080/login](http://localhost:8080/login)
 2. Crie uma conta na tela de login
 3. Faça login com as credenciais criadas
 4. Registre a temperatura de uma cidade com o nome e/ou coordenadas
