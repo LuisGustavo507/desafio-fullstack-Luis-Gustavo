@@ -26,6 +26,17 @@ docker run -p 8080:8080 darl1ngx/webclima:latest
 | Swagger  | http://localhost:8080/swagger    | Documentação da API        |
 | Health   | http://localhost:8080/health     | Health Check da aplicação  |
 
+## Endpoints da API
+
+| Método | Endpoint                         | Descrição                                                                 |
+|--------|----------------------------------|---------------------------------------------------------------------------|
+| POST   | `/api/weather/registrar`         | Cria um novo usuário (necessário para autenticação)                       |
+| POST   | `/api/weather/login`             | Autentica usuário e retorna token JWT                                     |
+| GET    | `/api/weather/consulta`          | Consulta clima por cidade e latitude/longitude                            |
+| GET    | `/api/weather/historico`         | Busca histórico de consultas do usuário autenticado                       |
+| GET    | `/health`                        | Health check da API e banco de dados                                      |
+| GET    | `/swagger`                       | Documentação interativa da API                                            |
+
 ---
 
 ## 🧭 Primeiros Passos
@@ -53,23 +64,6 @@ Para testar endpoints protegidos via Swagger:
 ```
 Bearer SEU_TOKEN_AQUI
 ```
-
----
-
-## 🩺 Health Check
-
-Endpoint disponível em:
-
-```
-GET /health
-```
-
-Retorna:
-
-- Status da aplicação
-- Status do PostgreSQL
-- Status da API externa (OpenWeather)
-- Tempo total de execução
 
 ---
 
@@ -101,3 +95,17 @@ darl1ngx/webclima:latest
 ```
 
 🔗 [https://hub.docker.com/r/darl1ngx/webclima](https://hub.docker.com/r/darl1ngx/webclima)
+
+
+# 🖼️ Protótipo Conceitual
+
+Antes da implementação, foi elaborado um protótipo conceitual da aplicação com o objetivo de:
+
+- Definir a **separação de camadas** (Domain, Application, Infrastructure)
+- Visualizar o **fluxo entre** `Controller → Use Case → Service → API externa`
+- Estruturar a **experiência do usuário** (consulta por cidade ou coordenadas)
+- Planejar a **visualização em lista e gráfico** do histórico
+
+> ⚠️ A implementação final evoluiu em relação ao protótipo, porém este desenho foi essencial para organizar a arquitetura e o fluxo da aplicação.
+<img width="1569" height="844" alt="image" src="https://github.com/user-attachments/assets/8d8782d5-4599-48c3-9e52-6c6114ab9c3f" />
+
