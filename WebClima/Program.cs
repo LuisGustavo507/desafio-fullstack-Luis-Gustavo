@@ -65,7 +65,6 @@ try
         });
 
 
-        // Incluir comentários XML
         var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
         var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFilename);
         if (File.Exists(xmlPath))
@@ -73,20 +72,18 @@ try
             options.IncludeXmlComments(xmlPath);
         }
 
-        // Ordenar actions por ordem alfabética
         options.OrderActionsBy(apiDesc => apiDesc.RelativePath);
 
     });
 
-    // Configuração de CORS
     builder.Services.AddCors(options =>
     {
         options.AddPolicy("AllowFrontend", policy =>
         {
-            policy.WithOrigins("http://localhost:5173")
+            policy.WithOrigins("http://localhost:8080")
                    .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials();
+                   .AllowAnyMethod()
+                   .AllowCredentials();
         });
     });
 
@@ -95,7 +92,6 @@ try
         options.UseNpgsql(
             builder.Configuration.GetConnectionString("DefaultConnection")));
 
-    //Domain
     builder.Services.AddScoped<ICidadeRepository, CidadeRepository>();
     builder.Services.AddScoped<IClimaRepository, ClimaRepository>();
     builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -103,7 +99,6 @@ try
     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
-    //Application
     builder.Services.AddScoped<ObterClimaPorCoordenadasUseCase>();
     builder.Services.AddScoped<ObterClimaPorCidadeUseCase>();
     builder.Services.AddScoped<ObterHistoricoClimaUseCase>();
@@ -112,7 +107,6 @@ try
     builder.Services.AddScoped<IPasswordHashService, PasswordHashService>();
 
 
-    // Infrastructure
     builder.Services.AddHealthChecks()
         .AddNpgSql(
             builder.Configuration.GetConnectionString("DefaultConnection")!,
@@ -159,27 +153,29 @@ try
 
     app.UseCors("AllowFrontend");
 
-    // Não esqueça de ativar os middlewares na ordem correta
     app.UseAuthentication();
     app.UseAuthorization();
 
-    // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
+    // Swagger
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
     {
-        app.UseSwagger();
-        app.UseSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "WebClima API v1");
-            options.DocumentTitle = "WebClima API - Documentação";
-            options.DisplayRequestDuration();
-        });
-    }
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "WebClima API v1");
+        options.DocumentTitle = "WebClima API - Documentação";
+        options.DisplayRequestDuration();
+    });
 
-    app.UseHttpsRedirection();
+    // Arquivos estáticos (frontend)
+    app.UseDefaultFiles();
+    app.UseStaticFiles();
+
+    // Controllers da API
+    app.MapControllers();
+
+    app.MapFallbackToFile("index.html");
 
     app.UseMiddleware<GlobalExceptionMiddleware>();
 
-    app.UseAuthorization();
 
     app.MapHealthChecks("/health", new HealthCheckOptions
     {
@@ -210,7 +206,6 @@ try
         }
     });
 
-    app.MapControllers();
 
     using (var scope = app.Services.CreateScope())
     {
@@ -227,12 +222,8 @@ try
             db.Database.EnsureCreated();
         }
     }
-
-
-
     app.Run();
     
-
 }
 catch (Exception ex)
 {
