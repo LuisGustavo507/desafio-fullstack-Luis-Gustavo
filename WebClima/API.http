@@ -1,0 +1,6 @@
+@WebClima_HostAddress = http://localhost:5110
+
+GET {{WebClima_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/WebClima.Testes/" />
+  <Project Path="Application/Application.csproj" />
+  <Project Path="Domain/Domain.csproj" />
+  <Project Path="Infrastructure/Infrastructure.csproj" />
+  <Project Path="WebClima.Testes/WebClima.Tests.csproj" Id="d77b7022-95ad-43ad-9f8f-af56b9604999" />
+  <Project Path="WebClima/WebClima.csproj" />
+</Solution>
