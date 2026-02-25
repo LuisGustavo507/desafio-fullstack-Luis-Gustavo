@@ -90,7 +90,7 @@ Serviços principais:
 | API       | http://localhost:5110        | Backend (.NET 8)                 |
 | Swagger   | http://localhost:5110/swagger| Documentação da API              |
 | Health    | http://localhost:5110/health | Health check da aplicação        |
-| Banco     | localhost:5432               | PostgreSQL 17                    |
+| Banco     | http://localhost:5432        | PostgreSQL 17                    |
 
 ### Primeiros passos
 
