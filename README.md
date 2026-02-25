@@ -67,9 +67,13 @@ Web Clima API é uma solução para consulta de condições climáticas.
 # Exemplo de configuração do arquivo .env (dados fictícios)
 
 OpenWeather__ApiKey=abcdef1234567890abcdef1234567890
+
 ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=webclima_demo;Username=webclima_user;Password=webclima_pass
+
 JWT_KEY=DemoSecretKeyForJWTSigningPurposes2026!@#$%
+
 JWT_ISSUER=WebClimaDemoAPI
+
 JWT_AUDIENCE=WebClimaDemoClient
 
 ### Subir a aplicação completa
