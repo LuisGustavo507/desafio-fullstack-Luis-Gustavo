@@ -1,127 +1,65 @@
-# Web Clima API
+🌦️ WebClima - Desafio Técnico
 
-## Visão Geral
+O WebClima é uma solução robusta para consulta e monitoramento meteorológico, construída com foco em resiliência, escalabilidade e boas práticas de arquitetura.
+🚀 Como Executar
 
-Web Clima API é uma solução para consulta de condições climáticas.
+A aplicação está totalmente "dockerizada". Você não precisa instalar dependências locais (Node, .NET, Python, etc.), apenas o Docker.
 
----
+    Baixe a imagem:
+    Bash
 
-## Stack Tecnológica
+    docker pull darl1ngx/webclima:latest
 
-| Camada         | Tecnologia           |
-|----------------|----------------------|
-| Backend        | .NET 8 (C#)          |
-| Frontend       | Vue.js 3, PrimeVue   |
-| Banco de Dados | PostgreSQL           |
-| Infraestrutura | Docker, Nginx        |
+    Execute o container:
+    Bash
 
----
+    docker run -p 8080:8080 darl1ngx/webclima:latest
 
-## Arquitetura de Resiliência
+    Acesse:
 
-### Padrão Unit of Work
+        Frontend/App: http://localhost:8080
 
-- **Garantia de integridade transacional**: Todas as operações de banco são agrupadas em unidades atômicas, evitando inconsistências.
-- **Separação de responsabilidades**: Facilita manutenção e testes.
+        API Health: http://localhost:8080/health
 
-### Resiliência com Polly
+🛠️ Arquitetura e Tecnologias
 
-| Recurso         | Descrição                                                                 |
-|-----------------|---------------------------------------------------------------------------|
-| Retry Policy    | Requisições externas à OpenWeather são automaticamente reexecutadas em caso de falhas transitórias. |
-| Circuit Breaker | Protege o sistema contra sobrecarga e falhas em cascata, isolando serviços indisponíveis.   
+O projeto foi desenvolvido seguindo padrões rigorosos de engenharia de software para garantir manutenção facilitada e alta disponibilidade.
+Padrões de Design
 
----
+    Clean Architecture: Separação clara entre as camadas de Domain, Application e Infrastructure.
 
-## Observabilidade e Monitoramento
+    Repository Pattern & Unit of Work: Abstração da camada de dados para consistência e testabilidade.
 
-- **Health Checks**: Endpoint `/health` expõe o estado da API e do banco de dados.
-- **Swagger**: Documentação interativa e testes de endpoints.
+    Injeção de Dependência: Para um acoplamento fraco entre os componentes.
 
----
+Resiliência e Monitoramento
 
-## Segurança
+    Circuit Breaker & Retry: Estratégias para lidar com falhas temporárias em APIs externas.
 
-- **JWT Authentication**: Protege endpoints sensíveis, como histórico de consultas, garantindo acesso apenas a usuários autenticados.
+    Health Checks: Monitoramento em tempo real da saúde do sistema.
 
----
+    Autenticação JWT: Segurança no acesso aos endpoints da API.
 
-## Infraestrutura
+🔍 Diagnóstico do Sistema (Health Check)
 
-- **Docker Compose**: Orquestração completa, incluindo Nginx como gateway/proxy reverso.
-- **Arquivo `.env`**: Configuração centralizada.
+O endpoint GET /health fornece um status detalhado da saúde da aplicação, incluindo:
+Componente	Descrição
+Application	Status geral da aplicação
+PostgreSQL	Conectividade com o banco de dados
+OpenWeather API	Disponibilidade da integração externa
+Execution Time	Tempo total de processamento da requisição
+🐳 Observações sobre o Docker
 
-## Imagem Docker Hub
+A imagem Docker disponível no Hub (darl1ngx/webclima) é uma solução All-in-One:
 
-| Serviço   | Imagem Docker Hub                  |
-|-----------|------------------------------------|
-| WebClima       | `darl1ngx/webclima`           |
+    Backend & Frontend: Integrados no mesmo ciclo de vida.
 
-## Como Executar
+    Banco de Dados: PostgreSQL configurado internamente.
 
-### Pré-requisitos
+    Migrations: O esquema do banco é criado e atualizado automaticamente ao subir o container.
 
-- Docker instalado e rodando
+    Zero Config: Sem necessidade de variáveis de ambiente manuais para o funcionamento básico.
 
-# Exemplo de configuração do arquivo .env (dados fictícios)
+📌 Requisitos
 
-OpenWeather__ApiKey=SUA_API_KEY_AQUI
-
-ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=webclima_demo;Username=webclima_user;Password=webclima_pass
-
-JWT_KEY=SUA_JWT_KEY_AQUI
-
-JWT_ISSUER=SUA_ISSUER
-
-JWT_AUDIENCE=SUA_AUDIENCE
-
-### Subir a aplicação completa
-
-Na raiz do projeto, execute:
-
-docker compose up -d --build
-
-Serviços principais:
-
-| Serviço   | URL                          | Descrição                        |
-|-----------|------------------------------|----------------------------------|
-| Frontend  | http://localhost:8080        | Interface web (Vue 3)            |
-| Swagger   | http://localhost:8080/swagger| Documentação da API              |
-| Health    | http://localhost:8080/health | Health check da aplicação        |
-
-### Primeiros passos
-
-1. Acesse [http://localhost:8080/login](http://localhost:8080/login)
-2. Crie uma conta na tela de login
-3. Faça login com as credenciais criadas
-4. Registre a temperatura de uma cidade com o nome e/ou coordenadas
-5. Consulte o histórico de temperaturas na aba "Consultar Histórico"
-
----
-
-## Endpoints da API
-
-| Método | Endpoint                         | Descrição                                                                 |
-|--------|----------------------------------|---------------------------------------------------------------------------|
-| POST   | `/api/weather/registrar`         | Cria um novo usuário (necessário para autenticação)                       |
-| POST   | `/api/weather/login`             | Autentica usuário e retorna token JWT                                     |
-| GET    | `/api/weather/consulta`          | Consulta clima por cidade e latitude/longitude                            |
-| GET    | `/api/weather/historico`         | Busca histórico de consultas do usuário autenticado                       |
-| GET    | `/health`                        | Health check da API e banco de dados                                      |
-| GET    | `/swagger`                       | Documentação interativa da API                                            |
-
----
-
-## Executando os Testes
-
-### Testes de Integração (.NET)
-
-Execute os testes via Visual Studio ou CLI:
-
-dotnet test WebClima.Testes
-
-- Os testes de integração simulam requisições reais, validando persistência, autenticação e endpoints.
-
----
-
-
+    Docker instalado e rodando.
