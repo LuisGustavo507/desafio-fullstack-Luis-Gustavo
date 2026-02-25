@@ -1,85 +1,111 @@
-# Desafio C# - Aliare
+# 🌦️ WebClima - Desafio Técnico
 
-Quer fazer parte da transformação do campo ~~escrevendo~~ codando o futuro do agronegócio?
+Aplicação fullstack para consulta e registro de informações climáticas por coordenadas geográficas ou nome de cidade.
 
-Se deseja participar do nosso processo seletivo, siga as instruções deste desafio e execute os seguintes passos: 
+- ✅ Backend (.NET 8)
+- ✅ Frontend (Vue 3)
+- ✅ PostgreSQL
+- ✅ Migrations automáticas
+- ✅ Health Check
+- ✅ Swagger com autenticação JWT
 
-* Nos mande sua resolução em um *pull request* neste repositório.
+## 🚀 Como Executar
 
-* Deixe a aplicação disponível publicamente em imagem docker em qualquer host. Na descrição do PR passe o link para que consigamos usar sua imagem.
+A aplicação pode ser executada com apenas dois comandos:
 
-* Por último, caso você ainda não esteja no processo seletivo, envie um email para [murilo.silva@aliare.co](mailto:murilo.silva@aliare.co) com seu CV anexado e o link da aplicação (se já estiver no processo seletivo, não precisa);
+```bash
+docker pull darl1ngx/webclima:latest
+docker run -p 8080:8080 darl1ngx/webclima:latest
+```
 
-  
+## 🌐 Acessos
 
-# Sobre a Aliare
+| Serviço  | URL                              | Descrição                  |
+|----------|----------------------------------|----------------------------|
+| Frontend | http://localhost:8080            | Interface Web (Vue 3)      |
+| Swagger  | http://localhost:8080/swagger    | Documentação da API        |
+| Health   | http://localhost:8080/health     | Health Check da aplicação  |
 
-A [Aliare](https://www.aliare.co/) é a maior empresa TECH AGRO do Brasil. Somos a plataforma de cooperação do agronegócio, conectando pessoas, ferramentas e empresas para transformar tempo em produtividade. Existimos para que todos os agentes da cadeia produtiva tenham informações certas, no tempo certo.
+## Endpoints da API
 
-Nascemos do legado de três grandes empresas: Siagri, Datacoper e BTG, movidas pelo desejo de transformar o agronegócio do futuro.
+| Método | Endpoint                         | Descrição                                                                 |
+|--------|----------------------------------|---------------------------------------------------------------------------|
+| POST   | `/api/weather/registrar`         | Cria um novo usuário (necessário para autenticação)                       |
+| POST   | `/api/weather/login`             | Autentica usuário e retorna token JWT                                     |
+| GET    | `/api/weather/consulta`          | Consulta clima por cidade e latitude/longitude                            |
+| GET    | `/api/weather/historico`         | Busca histórico de consultas do usuário autenticado                       |
+| GET    | `/health`                        | Health check da API e banco de dados                                      |
+| GET    | `/swagger`                       | Documentação interativa da API                                            |
 
-**Tudo que o agro precisa logo ali.**
+---
+
+## 🧭 Primeiros Passos
+
+1. Acesse 👉 [http://localhost:8080/login](http://localhost:8080/login)
+2. Crie uma conta na tela de login
+3. Faça login com as credenciais criadas
+4. Registre a temperatura de uma cidade:
+   - Informando o **nome da cidade**, ou
+   - Informando **latitude e longitude**
+5. Consulte o histórico de registros na aba **"Consultar Histórico"**
+
+---
+
+## 🔐 Autenticação
+
+A API utiliza autenticação **JWT**.
+
+Para testar endpoints protegidos via Swagger:
+
+1. Acesse 👉 [http://localhost:8080/swagger](http://localhost:8080/swagger)
+2. Clique em **Authorize**
+3. Insira o token no formato:
+
+```
+Bearer SEU_TOKEN_AQUI
+```
+
+---
+
+## 🏗️ Arquitetura
+
+A aplicação foi estruturada seguindo princípios de:
+
+- **Clean Architecture**
+- Separação de camadas (Domain, Application, Infrastructure)
+- Injeção de dependência
+- Repository Pattern
+- Unit of Work
+- Resiliência com Retry e Circuit Breaker
+- Health Checks
+- Autenticação JWT
+
+## 📌 Requisitos
+
+> **Docker instalado.**
+
+---
+
+## 📦 Docker Hub
+
+Imagem disponível em:
+
+```
+darl1ngx/webclima:latest
+```
+
+🔗 [https://hub.docker.com/r/darl1ngx/webclima](https://hub.docker.com/r/darl1ngx/webclima)
 
 
-# O desafio
+# 🖼️ Protótipo Conceitual
 
-O objetivo deste desafio é avaliar sua capacidade de projetar e desenvolver uma aplicação full-stack utilizando .NET 8 (C#) no backend e Vue 3 (TypeScript) no frontend, consumindo uma API REST e persistindo dados em banco relacional.
+Antes da implementação, foi elaborado um protótipo conceitual da aplicação com o objetivo de:
 
-A aplicação deve permitir que o usuário consulte e registre informações de clima de diferentes localidades, com visualização de histórico.
+- Definir a **separação de camadas** (Domain, Application, Infrastructure)
+- Visualizar o **fluxo entre** `Controller → Use Case → Service → API externa`
+- Estruturar a **experiência do usuário** (consulta por cidade ou coordenadas)
+- Planejar a **visualização em lista e gráfico** do histórico
 
+> ⚠️ A implementação final evoluiu em relação ao protótipo, porém este desenho foi essencial para organizar a arquitetura e o fluxo da aplicação.
+<img width="1569" height="844" alt="image" src="https://github.com/user-attachments/assets/8d8782d5-4599-48c3-9e52-6c6114ab9c3f" />
 
-## Requisitos
-- Registrar temperatura por cidade
-
-  - Deve existir um endpoint que receba o nome da cidade.
-  - A aplicação deve consultar um provedor de clima (ou simulado/fake provider), persistir o resultado no banco de dados e retornar a temperatura atual.
-
-- Registrar temperatura por coordenadas
-
-  - Deve existir um endpoint que receba a latitude e longitude.
-  - A aplicação deve consultar o provedor de clima, persistir o resultado no banco de dados e retornar a temperatura atual.
-
-- Consultar histórico de temperaturas
-
-  - Deve existir um endpoint que receba o nome da cidade ou as coordenadas (lat/long).
-  - O sistema deve retornar o histórico de temperaturas registradas para a localidade nos últimos 30 dias, ordenadas do mais recente para o mais antigo.
-
-- Interface Web
-
-  - A aplicação deve possuir um frontend em Vue 3 + TypeScript que permita:
-    - Informar o nome da cidade para registrar a leitura de temperatura.
-    - Consultar e visualizar o histórico de temperaturas em lista e em gráfico.
-## Requisitos não funcionais
-
-- A aplicação deve ser desenvolvida em .NET 8 (C#) no backend e Vue 3 + TypeScript no frontend.
-- O banco de dados deve ser relacional (PostgreSQL).
-- Deve haver documentação da API via Swagger.
-- O sistema deve expor um health check em /health.
-- O código deve conter testes automatizados (unitários e pelo menos um de integração).
-- A solução deve ser conteinerizada com Docker, com docker-compose.yml para orquestrar API, banco e frontend.
-- O repositório deve conter instruções claras no README.md para execução da aplicação.
-
-- Será considerado ponto extra:
- - Autenticação JWT para endpoints de escrita.
- - Feature flag para troca de provedor de clima.
- - Aplicativo .NET MAUI simples consumindo a API.
- - Pipeline de CI/CD configurado (GitHub Actions).
-  
-Obs.: Não se preocupe com os pontos extras, faça-os se você se sentir confortável e se tiver tempo, consideraremos seu código **desclassificado se seu projeto não estiver funcionando** ou se não tiver os requisitos básicos implementados e funcionais.
-
-## Dicas
-
-- Você pode usar a API do *[OpenWeatherMaps](https://openweathermap.org)* para buscar dados de temperatura;
-- Certifique-se que sua imagem está funcionando perfeitamente com um simples: `docker run -d --name desafio-csharp -port 5000:5000 [seu_docker_hub]/desafio-csharp`, isso te dará pontos extras;
-
-## Recomendações
-
-* Utilize boas práticas de codificação, isso será avaliado;
-* Código limpo, organizado e documentado (quando necessário);
-* Use e abuse de:
-  * SOLID;
-  * Criatividade;
-  * Performance;
-  * Manutenabilidade;
-  * Testes Unitários
-  * ... pois avaliaremos tudo isso!
